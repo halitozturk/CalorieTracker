@@ -69,65 +69,15 @@ namespace UI
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
-            SetDates();
+
+            ProgressBarLoad();
             FillCaloriesByMealType();
             CircularProgresBarLoad();
             SetWeeklyChartValues();
 
 
-            //dgvMealsToday.DataSource = mealDetailsService.GetTotalCalorieByMeal(mealDetails, DateTime.Today, currentUser);
-
-
-
-
-
-
-
-
-
-            //MealDetailsViewModel mealDetailsVm = new MealDetailsViewModel();
-            //double dailyLimit = 0, currentCalorie = 0;
-
-            //foreach (var item in )
-            //{
-
-            //}
-
-            //mealDetailsVm.Calorie
-            //currentCalorie = 
-            //cpbDailyLimit.Text = 
-
-
-
-
-
-
         }
 
-        private void SetWeeklyChartValues()
-        {
-            MealService mealService = new MealService(context);
-            MealDetailsService mealDetailsService = new MealDetailsService(context);
-            List<MealViewModel> mealList = new List<MealViewModel>();
-            int[] list = new int[7];
-            for (int i = 0; i < 7; i++)
-            {
-                DateTime date = (DateTime.Now.Date).AddDays(-i);
-                mealList = mealService.GetMealsByDate(date);
-                double totalDailyCalorie = 0;
-                foreach (var meal in mealList)
-                {
-
-                    totalDailyCalorie += mealDetailsService.GetMealCalorieByMealId(meal.Id, date);
-                }
-                
-                list[i] = Convert.ToInt32(totalDailyCalorie);
-                lblDays.Text += $"{date.Day}.{date.Month}     ";
-
-            }
-            sparkLine1.Source = list;
-        }
 
         private void btnHome_Click(object sender, EventArgs e)
         {
@@ -175,7 +125,30 @@ namespace UI
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
-        private void SetDates() 
+        private void SetWeeklyChartValues()
+        {
+            MealService mealService = new MealService(context);
+            MealDetailsService mealDetailsService = new MealDetailsService(context);
+            List<MealViewModel> mealList = new List<MealViewModel>();
+            int[] list = new int[7];
+            for (int i = 0; i < 7; i++)
+            {
+                DateTime date = (DateTime.Now.Date).AddDays(-i);
+                mealList = mealService.GetMealsByDate(date);
+                double totalDailyCalorie = 0;
+                foreach (var meal in mealList)
+                {
+
+                    totalDailyCalorie += mealDetailsService.GetMealCalorieByMealId(meal.Id, date);
+                }
+
+                list[i] = Convert.ToInt32(totalDailyCalorie);
+                lblDays.Text += $"{date.Day}.{date.Month}     ";
+
+            }
+            sparkLine1.Source = list;
+        }
+        private void ProgressBarLoad() 
         {
             DateTime goalDate;
             lblStartDate.Text = currentUser.CreatedDate.ToString("dd.MM.yyyy"); 
@@ -194,17 +167,7 @@ namespace UI
             progressBar1.Value=(DateTime.Now- currentUser.CreatedDate).Days;
         }
         double totalMealCalorie;
-        //private void FillMealTypes()
-        //{
-        //    MealTypeService mealTypeService = new MealTypeService(context);
-        //    List<MealTypeViewModel> mealTypeList = new List<MealTypeViewModel>();
-        //    mealTypeList = mealTypeService.GetAllMealTypes();
-        //    foreach (var mealType in mealTypeList)
-        //    {
-        //        dgvMyMealsToday.Rows.Add(mealType.Id, mealType.Name);
-        //    }
-
-        //}
+     
         private void FillCaloriesByMealType()
         {
             try
